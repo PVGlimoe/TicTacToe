@@ -27,7 +27,7 @@ public class Game extends AppCompatActivity {
 
     private DocumentReference boardRef = FirebaseFirestore.getInstance().document("tictactoe/board");
     private DocumentReference playerRef = FirebaseFirestore.getInstance().document("tictactoe/players");
-
+    private TicTacToeBoard board = new TicTacToeBoard();
 
 
     @Override
@@ -48,6 +48,19 @@ public class Game extends AppCompatActivity {
     }
 
     public void selectTile(View v){
+
+
+        playerRef.update(playerData).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                System.out.println("Player posten virkede");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Player posten virker ikke");
+            }
+        });
 
         int buttonId = v.getId();
         for (int i = 1; i < 10; i++) {
@@ -87,46 +100,6 @@ public class Game extends AppCompatActivity {
 
         }
 
-        //oppe Hen
-        if (positionValues.get(0).equals(positionValues.get(1)) && positionValues.get(0).equals(positionValues.get(2)) && !positionValues.get(0).isEmpty()){
-            showWinner(positionValues.get(0));
-
-        }
-
-        //midt Hen
-        if (positionValues.get(3).equals(positionValues.get(4)) && positionValues.get(3).equals(positionValues.get(5)) && !positionValues.get(3).isEmpty()){
-            showWinner(positionValues.get(3));
-        }
-
-        //nede Hen
-        if (positionValues.get(6).equals(positionValues.get(7)) && positionValues.get(6).equals(positionValues.get(8)) && !positionValues.get(6).isEmpty()){
-            showWinner(positionValues.get(6));
-        }
-
-        //Venstre ned
-        if (positionValues.get(0).equals(positionValues.get(3)) && positionValues.get(0).equals(positionValues.get(6)) && !positionValues.get(0).isEmpty()){
-            showWinner(positionValues.get(0));
-        }
-
-        //Midt ned
-        if (positionValues.get(1).equals(positionValues.get(4)) && positionValues.get(1).equals(positionValues.get(7)) && !positionValues.get(1).isEmpty()){
-            showWinner(positionValues.get(1));
-        }
-
-        //Højre ned
-        if (positionValues.get(2).equals(positionValues.get(5)) && positionValues.get(2).equals(positionValues.get(8)) && !positionValues.get(2).isEmpty()){
-            showWinner(positionValues.get(2));
-        }
-
-        //Skrå ned
-        if (positionValues.get(0).equals(positionValues.get(4)) && positionValues.get(0).equals(positionValues.get(8)) && !positionValues.get(0).isEmpty()){
-            showWinner(positionValues.get(0));
-        }
-
-        //skrå op
-        if (positionValues.get(2).equals(positionValues.get(4)) && positionValues.get(2).equals(positionValues.get(6)) && !positionValues.get(2).isEmpty()){
-            showWinner(positionValues.get(2));
-        }
     }
 
     public void showWinner(String symbol){
