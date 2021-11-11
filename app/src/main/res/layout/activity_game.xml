@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Game">
+
+    <TextView
+        android:id="@+id/textViewActivePlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="404dp"
+        android:layout_height="370dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewActivePlayer"
+        app:srcCompat="@drawable/tictactoe" />
+
+    <Button
+        android:id="@+id/buttonPos1"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="95dp"
+        android:layout_height="78dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
+        android:onClick="selectTile"
+        android:textColor="@color/black"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonPos2"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="106dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="64dp"
+        android:onClick="selectTile"
+        android:textColor="@color/black"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/buttonPos1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonPos3"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="109dp"
+        android:layout_height="85dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="64dp"
+        android:onClick="selectTile"
+        android:textColor="@color/black"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/buttonPos2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonPos4"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="103dp"
+        android:layout_height="115dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:onClick="selectTile"
+        android:textColor="@color/black"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPos1" />
+
+    <Button
+        android:id="@+id/buttonPos5"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="122dp"
+        android:layout_height="94dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:onClick="selectTile"
+        android:textColor="@color/black"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/buttonPos4"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPos2" />
+
+    <Button
+        android:id="@+id/buttonPos6"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="122dp"
+        android:layout_height="106dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:onClick="selectTile"
+        android:textColor="@color/black"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/buttonPos5"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPos3" />
+
+    <Button
+        android:id="@+id/buttonPos7"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="102dp"
+        android:layout_height="104dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:onClick="selectTile"
+        android:textColor="@color/black"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPos4" />
+
+    <Button
+        android:id="@+id/buttonPos8"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="125dp"
+        android:layout_height="107dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:onClick="selectTile"
+        android:textColor="@color/black"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/buttonPos7"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPos5" />
+
+    <Button
+        android:id="@+id/buttonPos9"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="124dp"
+        android:layout_height="94dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@android:color/transparent"
+        android:onClick="selectTile"
+        android:textColor="@color/black"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/buttonPos8"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPos6" />
+
+    <TextView
+        android:id="@+id/textViewWinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="150dp"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonPlayAgain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:onClick="playAgain"
+        android:text="Play Again"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
