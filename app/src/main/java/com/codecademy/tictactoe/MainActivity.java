@@ -30,10 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private String player1;
     private String player2;
     private boolean ready;
-    private PLAYER_TYPE playerType;
-    private enum PLAYER_TYPE {
-        PLAYER_1, PLAYER_2;
-    }
+    private PlayerType playerType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +44,10 @@ public class MainActivity extends AppCompatActivity {
                 ready = value.getBoolean("ready");
                 if(playerType == null){
                     if(player1.length() == 0){
-                        playerType = PLAYER_TYPE.PLAYER_1;
+                        playerType = PlayerType.PLAYER_1;
                     }
                     else {
-                        playerType = PLAYER_TYPE.PLAYER_2;
+                        playerType = PlayerType.PLAYER_2;
                     }
                 }
                 if(ready){
@@ -68,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Game.class);
         intent.putExtra("player1", player1);
         intent.putExtra("player2", player2);
+        intent.putExtra("playerType", playerType);
 
         startActivity(intent);
     }
@@ -77,37 +75,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void playGame (View view){
         Map<String, Object> playerData = new HashMap<>();
-
-       if(playerType == PLAYER_TYPE.PLAYER_1){
-           EditText p1 = findViewById(R.id.editTextPlayer1);
-           Object player1 = p1.getText().toString();
-
-           playerData.put("player1", player1);
+        EditText playerNameEditText = findViewById(R.id.editTextPlayer);
+        Object playerName = playerNameEditText.getText().toString();
+        if(playerType == PlayerType.PLAYER_1){
+           playerData.put("player1", playerName);
        }
        else {
-
-           EditText p2 = findViewById(R.id.editTextPlayer2);
-           String player2 = p2.getText().toString();
-
-           playerData.put("player2", player2);
+           playerData.put("player2", playerName);
            playerData.put("ready", true);
        }
 
-        playerRef.update(playerData).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                System.out.println("Player posten virkede");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                System.out.println("Player posten virker ikke");
-            }
+        playerRef.update(playerData).addOnSuccessListener(e -> {
+            System.out.println("Player posten virkede");
+        }).addOnFailureListener( e -> {
+            System.out.println("Player posten virker ikke");
         });
-
-
-
-
-
     }
 }

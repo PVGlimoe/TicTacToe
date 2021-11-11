@@ -1,6 +1,5 @@
 package com.codecademy.tictactoe;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,107 +8,166 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Game extends AppCompatActivity {
-
-    String player1;
-    String player2;
-    TextView activePlayer;
+    private String player1;
+    private String player2;
+    private PlayerType playerType;
+    private TextView activePlayerTextView;
+    private PlayerType activePlayer = PlayerType.PLAYER_1;
 
     private DocumentReference boardRef = FirebaseFirestore.getInstance().document("tictactoe/board");
     private DocumentReference playerRef = FirebaseFirestore.getInstance().document("tictactoe/players");
-    private TicTacToeBoard board = new TicTacToeBoard();
-
+    private TicTacToeBoard game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        Intent intent = getIntent();
-        player1 = intent.getStringExtra("player1");
-        player2 = intent.getStringExtra("player2");
-
-        activePlayer = findViewById(R.id.textViewActivePlayer);
-        activePlayer.setText(player1 + "'s Turn");
-
-
-
-
-    }
-
-    public void selectTile(View v){
-
-
-        playerRef.update(playerData).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                System.out.println("Player posten virkede");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                System.out.println("Player posten virker ikke");
+        boardRef.addSnapshotListener((value, error) ->  {
+            if (value.exists()) {
+                ArrayList<String> board = (ArrayList<String>) value.get("board");
+                game.setBoard(board);
+                drawBoard();
+            }else if (error != null) {
+                System.out.println("Hentede data virkede ikke");
             }
         });
 
+        Intent intent = getIntent();
+        player1 = intent.getStringExtra("player1");
+        player2 = intent.getStringExtra("player2");
+        playerType = (PlayerType) intent.getSerializableExtra("playerType");
+
+        activePlayerTextView = findViewById(R.id.textViewActivePlayer);
+        activePlayerTextView.setText(player1 + "'s Turn");
+
+        game = new TicTacToeBoard(playerType == PlayerType.PLAYER_1 ? TicTacToeBoard.KRYDS : TicTacToeBoard.BOLLE);
+    }
+
+    public void selectTile(View v){
         int buttonId = v.getId();
         for (int i = 1; i < 10; i++) {
             int id = getResources().getIdentifier("buttonPos"+i, "id", getPackageName());
             if (buttonId == id){
+                boolean insertSuccess = game.insertCharacter(i - 1);
+                if(!insertSuccess){
+                    return;
+                }
                 Button selectedTile = findViewById(id);
-                if (!selectedTile.getText().toString().equals("")){
-                    break;
-                }
-                String activePlayerSting = activePlayer.getText().toString();
-                if (activePlayerSting.equals(player1 + "'s Turn")){
-                    selectedTile.setText("X");
-                    activePlayer.setText(player2 + "'s Turn");
-                } else {
-                    selectedTile.setText("O");
-                    activePlayer.setText(player1 + "'s Turn");
-                }
+
+                selectedTile.setText("" + game.getPlayerChar());
+
+                setActivePlayerTextView();
+
                 break;
-
             }
-
         }
+
+        Map<String, Object> boardData = new HashMap<>();
+        boardData.put("board", game.getBoard());
+
+        boardRef.update(boardData)
+            .addOnSuccessListener(e -> {
+                System.out.println("Player posten virkede");
+            })
+            .addOnFailureListener(e -> {
+                    System.out.println("Player posten virker ikke");
+                }
+            );
         checkForWin();
     }
 
-    public void checkForWin(){
-
-        TextView winnerText = findViewById(R.id.textViewWinner);
-        List<String> positionValues = new ArrayList<>();
-
-        for (int i = 1; i <10 ; i++) {
+    public void drawBoard(){
+        ArrayList<String> board = game.getBoard();
+        for (int i = 1; i < 10; i++) {
             int id = getResources().getIdentifier("buttonPos"+i, "id", getPackageName());
-            Button button = findViewById(id);
-            String pos = button.getText().toString();
-
-            positionValues.add(pos);
-
+            Button tile = findViewById(id);
+            tile.setText(board.get(i-1));
         }
-
     }
 
-    public void showWinner(String symbol){
+    public void setActivePlayerTextView(){
+        if(activePlayer == playerType){
+            activePlayerTextView.setText("Your Turn");
+        }
+        else {
+            String otherPlayerName = playerType == PlayerType.PLAYER_1 ? player2 : player1;
+            activePlayerTextView.setText(otherPlayerName + "'s Turn");
+        }
+    }
+
+    public void checkForWin(){
+        switch (game.getState()){
+            case RUNNING:
+                break;
+            case WINNER_O:
+                showWinner(PlayerType.PLAYER_2);
+                break;
+            case WINNER_X:
+                showWinner(PlayerType.PLAYER_1);
+                break;
+            case TIE:
+                showTie();
+                break;
+        }
+    }
+
+    public void showWinner(PlayerType winner){
         TextView winnerText = findViewById(R.id.textViewWinner);
-        if (symbol.equals("X")){
+        if (winner == PlayerType.PLAYER_1){
             winnerText.setText(player1 + " WINS!");
         } else {
             winnerText.setText(player2 + " WINS!");
         }
         disableButtons();
+
+    }
+
+    public void showTie(){
+        TextView winnerText = findViewById(R.id.textViewWinner);
+        winnerText.setText("It's a Tie!");
+        disableButtons();
+    }
+
+    public void resetDatabase(){
+        Map<String, Object> boardData = new HashMap<>();
+        game.resetBoard();
+
+        boardData.put("board", game.getBoard());
+
+        boardRef.update(boardData)
+            .addOnSuccessListener(e -> {
+                System.out.println("Player posten virkede");
+            })
+            .addOnFailureListener(e -> {
+                System.out.println("Player posten virker ikke");
+            }
+        );
+
+        Map<String, Object> playerData = new HashMap<>();
+        playerData.put("player1", "");
+        playerData.put("player2", "");
+        playerData.put("ready", false);
+
+        playerRef.update(playerData)
+            .addOnSuccessListener(e -> {
+                System.out.println("Player posten virkede");
+            })
+            .addOnFailureListener(e -> {
+                System.out.println("Player posten virker ikke");
+            }
+        );
     }
 
     public void disableButtons(){
@@ -122,6 +180,7 @@ public class Game extends AppCompatActivity {
     }
 
     public void playAgain(View view){
+        resetDatabase();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
