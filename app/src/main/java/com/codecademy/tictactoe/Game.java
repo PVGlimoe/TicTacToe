@@ -1,5 +1,6 @@
 package com.codecademy.tictactoe;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,14 +9,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Game extends AppCompatActivity {
 
     String player1;
     String player2;
     TextView activePlayer;
+
+    private DocumentReference boardRef = FirebaseFirestore.getInstance().document("tictactoe/board");
+    private DocumentReference playerRef = FirebaseFirestore.getInstance().document("tictactoe/players");
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +41,8 @@ public class Game extends AppCompatActivity {
 
         activePlayer = findViewById(R.id.textViewActivePlayer);
         activePlayer.setText(player1 + "'s Turn");
+
+
 
 
     }
