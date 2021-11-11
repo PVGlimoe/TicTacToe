@@ -39,6 +39,7 @@ public class Game extends AppCompatActivity {
                 ArrayList<String> board = (ArrayList<String>) value.get("board");
                 game.setBoard(board);
                 drawBoard();
+                togglePlayerTurn();
                 checkForWin();
             }else if (error != null) {
                 System.out.println("Hentede data virkede ikke");
@@ -70,10 +71,7 @@ public class Game extends AppCompatActivity {
 
                 selectedTile.setText("" + game.getPlayerChar());
 
-
-                activePlayer = activePlayer == PlayerType.PLAYER_1 ? PlayerType.PLAYER_2 : PlayerType.PLAYER_1;
-                setActivePlayerTextView();
-
+                togglePlayerTurn();
                 break;
             }
         }
@@ -99,6 +97,11 @@ public class Game extends AppCompatActivity {
             Button tile = findViewById(id);
             tile.setText(board.get(i-1));
         }
+    }
+
+    public void togglePlayerTurn(){
+        activePlayer = activePlayer == PlayerType.PLAYER_1 ? PlayerType.PLAYER_2 : PlayerType.PLAYER_1;
+        setActivePlayerTextView();
     }
 
     public void setActivePlayerTextView(){
