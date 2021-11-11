@@ -39,6 +39,7 @@ public class Game extends AppCompatActivity {
                 ArrayList<String> board = (ArrayList<String>) value.get("board");
                 game.setBoard(board);
                 drawBoard();
+                checkForWin();
             }else if (error != null) {
                 System.out.println("Hentede data virkede ikke");
             }
@@ -53,6 +54,7 @@ public class Game extends AppCompatActivity {
         activePlayerTextView.setText(player1 + "'s Turn");
 
         game = new TicTacToeBoard(playerType == PlayerType.PLAYER_1 ? TicTacToeBoard.KRYDS : TicTacToeBoard.BOLLE);
+        setActivePlayerTextView();
     }
 
     public void selectTile(View v){
@@ -68,6 +70,8 @@ public class Game extends AppCompatActivity {
 
                 selectedTile.setText("" + game.getPlayerChar());
 
+
+                activePlayer = activePlayer == PlayerType.PLAYER_1 ? PlayerType.PLAYER_2 : PlayerType.PLAYER_1;
                 setActivePlayerTextView();
 
                 break;
