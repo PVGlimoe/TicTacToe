@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 player2 = value.getString("player2");
                 ready = value.getBoolean("ready");
                 if(playerType == null){
-                    if(player1.length() == 0){
+                    if(player1.equals("")){
                         playerType = PlayerType.PLAYER_1;
                     }
                     else {

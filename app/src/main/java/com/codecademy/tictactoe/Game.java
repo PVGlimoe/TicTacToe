@@ -71,7 +71,6 @@ public class Game extends AppCompatActivity {
 
                 selectedTile.setText("" + game.getPlayerChar());
 
-                togglePlayerTurn();
                 break;
             }
         }
