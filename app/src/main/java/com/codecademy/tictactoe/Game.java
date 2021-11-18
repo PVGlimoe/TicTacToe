@@ -52,13 +52,16 @@ public class Game extends AppCompatActivity {
         playerType = (PlayerType) intent.getSerializableExtra("playerType");
 
         activePlayerTextView = findViewById(R.id.textViewActivePlayer);
-        activePlayerTextView.setText(player1 + "'s Turn");
+        togglePlayerTurn();
 
         game = new TicTacToeBoard(playerType == PlayerType.PLAYER_1 ? TicTacToeBoard.KRYDS : TicTacToeBoard.BOLLE);
         setActivePlayerTextView();
     }
 
     public void selectTile(View v){
+        if(activePlayer != playerType){
+            return;
+        }
         int buttonId = v.getId();
         for (int i = 1; i < 10; i++) {
             int id = getResources().getIdentifier("buttonPos"+i, "id", getPackageName());
