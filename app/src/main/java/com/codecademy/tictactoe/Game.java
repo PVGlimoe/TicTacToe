@@ -34,12 +34,24 @@ public class Game extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        // I Firestore har vi oprettet et document som hedder board, board ref er en reference til dette dokument.
+        // Nå vi kalder addSnapshotListener på boardRed subscriber vi på de ændringer som sker i dokumentet
+        // altså hver gang der sker en ændring bliver den lambda funktion, som vi giver som argument, kaldt.
         boardRef.addSnapshotListener((value, error) ->  {
+            // Dette er inden i lambda funktionen, den bliver kaldt hver gang en spiller er færdig med sin tur.
+            // Det er også vigtigt at have med at den bliver kald både på telefonen for den spiller som foretager ændringen og
+            // på den anden spillers telefon.
+            // 1. vi tjekker om value eksistere, om vi rent faktisk får noget data tilsendt, eller om der er sket en felj.
             if (value.exists()) {
+                // 2. Vi trækker 'board' ud af det data(value) som er blevet sendt, hvilket bare en en list af strings.
                 ArrayList<String> board = (ArrayList<String>) value.get("board");
+                // 3. vi sige til vores game-objekt(Den som holder styr på al tictactoe logikken) at den skal opdatere sig board.
                 game.setBoard(board);
+                // 4. Tegn boardet, da der er sket en ændring i databasen skal det også vises i frontenden.
                 drawBoard();
+                // 5. Skift hvilken spillers tur det nu er
                 togglePlayerTurn();
+                // 6. Tjek om vi har en vinder
                 checkForWin();
             }else if (error != null) {
                 System.out.println("Hentede data virkede ikke");
